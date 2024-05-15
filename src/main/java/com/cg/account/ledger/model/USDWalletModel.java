@@ -8,12 +8,12 @@ import java.math.BigDecimal;
 import com.cg.account.ledger.constants.AssetType;
 
 @Data
-public class INRWalletModel extends WalletModel {
+public class USDWalletModel extends WalletModel {
     private BigDecimal balance;
 
     @Builder
-    public INRWalletModel(String walletId, String accountId, BigDecimal balance) {
-        super(walletId, accountId, AssetType.FIAT_INR);
+    public USDWalletModel(String walletId, String accountId, BigDecimal balance) {
+        super(walletId, accountId, AssetType.FIAT_USD);
         this.balance = balance;
     }
 }

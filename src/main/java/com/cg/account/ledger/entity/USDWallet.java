@@ -14,15 +14,15 @@ import com.cg.account.ledger.constants.AssetType;
 
 @Entity
 @Data
-@Table(name="fiat_inr_wallet")
+@Table(name="fiat_usd_wallet")
 @NoArgsConstructor
-public class INRWallet extends Wallet {
+public class USDWallet extends Wallet {
     @Column(name = "balance")
     private BigDecimal balance;
 
     @Builder
-    public INRWallet(String walletId, Account account, BigDecimal balance, LocalDateTime timestamp) {
-        super(walletId, account, AssetType.FIAT_INR,timestamp);
+    public USDWallet(String walletId, Account account, BigDecimal balance, LocalDateTime timestamp) {
+        super(walletId, account, AssetType.FIAT_USD,timestamp);
         this.balance = balance;
     }
 }

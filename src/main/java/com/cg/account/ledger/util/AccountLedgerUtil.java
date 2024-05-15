@@ -13,7 +13,7 @@ import com.cg.account.ledger.entity.FundWallet;
 import com.cg.account.ledger.entity.HKDWallet;
 import com.cg.account.ledger.entity.Posting;
 import com.cg.account.ledger.entity.StockWallet;
-import com.cg.account.ledger.entity.INRWallet;
+import com.cg.account.ledger.entity.USDWallet;
 import com.cg.account.ledger.entity.Wallet;
 import com.cg.account.ledger.model.WalletModel;
 import com.cg.account.ledger.repository.CryptoRepository;
@@ -54,8 +54,8 @@ public class AccountLedgerUtil {
 			Optional<HKDWallet> hkdWallet = fiatHKDRepository.findById(wallet.getId());
 			amount = hkdWallet.get().getBalance();
 			break;
-		case "FIAT_INR":
-			Optional<INRWallet> usdWallet = fiatUSDRepository.findById(wallet.getId());
+		case "FIAT_USD":
+			Optional<USDWallet> usdWallet = fiatUSDRepository.findById(wallet.getId());
 			amount = usdWallet.get().getBalance();
 			break;
 		case "STOCK":
@@ -89,8 +89,8 @@ public class AccountLedgerUtil {
 			hkdWallet.get().setBalance(hkdWallet.get().getBalance().subtract(posting.getTxnAmount()));
 			fiatHKDRepository.save(hkdWallet.get());
 			break;
-		case "FIAT_INR":
-			Optional<INRWallet> usdWallet = fiatUSDRepository.findById(fromWallet.getId());
+		case "FIAT_USD":
+			Optional<USDWallet> usdWallet = fiatUSDRepository.findById(fromWallet.getId());
 			usdWallet.get().setBalance(usdWallet.get().getBalance().subtract(posting.getTxnAmount()));
 			fiatUSDRepository.save(usdWallet.get());
 			break;
@@ -123,8 +123,8 @@ public class AccountLedgerUtil {
 			hkdWallet.get().setBalance(hkdWallet.get().getBalance().add(posting.getTxnAmount()));
 			fiatHKDRepository.save(hkdWallet.get());
 			break;
-		case "FIAT_INR":
-			Optional<INRWallet> usdWallet = fiatUSDRepository.findById(toWallet.getId());
+		case "FIAT_USD":
+			Optional<USDWallet> usdWallet = fiatUSDRepository.findById(toWallet.getId());
 			usdWallet.get().setBalance(usdWallet.get().getBalance().add(posting.getTxnAmount()));
 			fiatUSDRepository.save(usdWallet.get());
 			break;

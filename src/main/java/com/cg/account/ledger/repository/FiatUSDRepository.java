@@ -1,12 +1,10 @@
 package com.cg.account.ledger.repository;
 
-import java.math.BigDecimal;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.cg.account.ledger.entity.INRWallet;
+import com.cg.account.ledger.entity.USDWallet;
 
-public interface FiatUSDRepository extends JpaRepository<INRWallet, Long> {
+public interface FiatUSDRepository extends JpaRepository<USDWallet, Long> {
 //	BigDecimal getBalancefromId(long id);
 
 }

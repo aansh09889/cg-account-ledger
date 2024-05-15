@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public enum FiatCurrency {
     HKD(new BigDecimal(1000.0)),
-    INR(new BigDecimal(1000.0));
+    USD(new BigDecimal(1000.0));
 
     private BigDecimal initialBalance;
 

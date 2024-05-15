@@ -36,7 +36,7 @@ import com.cg.account.ledger.model.FundWalletModel;
 import com.cg.account.ledger.model.HKDWalletModel;
 import com.cg.account.ledger.model.StockDataModel;
 import com.cg.account.ledger.model.StockWalletModel;
-import com.cg.account.ledger.model.INRWalletModel;
+import com.cg.account.ledger.model.USDWalletModel;
 import com.cg.account.ledger.model.WalletModel;
 import com.cg.account.ledger.repository.AccountRepository;
 
@@ -93,11 +93,11 @@ public class AccountAggregate {
 	        // Create 5 Wallets (USDWallet,HKDWallet,CryptoWallet,StockWallet
 	        // Adding USD Wallet
 	        String usdWalletId = UUID.randomUUID().toString();
-	        this.wallets.put(usdWalletId, INRWalletModel.builder()
+	        this.wallets.put(usdWalletId, USDWalletModel.builder()
 	                .accountId(openAccountCommand.getAccountId())
 	                .walletId(usdWalletId.toString())
 
-	                .balance(FiatCurrency.INR.getInitialBalance()).build());
+	                .balance(FiatCurrency.USD.getInitialBalance()).build());
 
 	        // Adding HKD Wallet
 	        String hkdWalletId = UUID.randomUUID().toString();
