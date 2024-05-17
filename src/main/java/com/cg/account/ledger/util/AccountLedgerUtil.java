@@ -10,12 +10,11 @@ import org.springframework.stereotype.Component;
 
 import com.cg.account.ledger.entity.CryptoWallet;
 import com.cg.account.ledger.entity.FundWallet;
-import com.cg.account.ledger.entity.HKDWallet;
+import com.cg.account.ledger.entity.FiatCurrencyOneWallet;
 import com.cg.account.ledger.entity.Posting;
 import com.cg.account.ledger.entity.StockWallet;
-import com.cg.account.ledger.entity.USDWallet;
+import com.cg.account.ledger.entity.FiatCurrencyTwoWallet;
 import com.cg.account.ledger.entity.Wallet;
-import com.cg.account.ledger.model.WalletModel;
 import com.cg.account.ledger.repository.CryptoRepository;
 import com.cg.account.ledger.repository.FiatHKDRepository;
 import com.cg.account.ledger.repository.FiatUSDRepository;
@@ -49,24 +48,24 @@ public class AccountLedgerUtil {
 	public BigDecimal getAmountFromAsset(Wallet wallet) {
 		logger.info("Amount check validaiton Start : " + wallet.getWalletId().toString() + " id : " + wallet.getId());
 		BigDecimal amount = new BigDecimal(0);
-		switch (wallet.getAssetType().toString().toUpperCase()) {
-		case "FIAT_HKD":
-			Optional<HKDWallet> hkdWallet = fiatHKDRepository.findById(wallet.getId());
+		switch (wallet.getAssetType()) {
+		case FIAT_CURRENCY_ONE:
+			Optional<FiatCurrencyOneWallet> hkdWallet = fiatHKDRepository.findById(wallet.getId());
 			amount = hkdWallet.get().getBalance();
 			break;
-		case "FIAT_USD":
-			Optional<USDWallet> usdWallet = fiatUSDRepository.findById(wallet.getId());
+		case FIAT_CURRENCY_TWO:
+			Optional<FiatCurrencyTwoWallet> usdWallet = fiatUSDRepository.findById(wallet.getId());
 			amount = usdWallet.get().getBalance();
 			break;
-		case "STOCK":
+		case STOCK:
 			Optional<StockWallet> stockWallet = stockRepository.findById(wallet.getId());
 			amount = stockWallet.get().getBalanceQty();
 			break;
-		case "CRYPTO":
+		case CRYPTO:
 			Optional<CryptoWallet> cryptoWallet = cryptoRepository.findById(wallet.getId());
 			amount = cryptoWallet.get().getBalanceQty();
 			break;
-		case "FUND":
+		case FUND:
 			Optional<FundWallet> fundWallet = fundRepository.findById(wallet.getId());
 			amount = fundWallet.get().getBalance();
 			break;
@@ -83,28 +82,28 @@ public class AccountLedgerUtil {
 		Wallet fromWallet = walletRepository.findByWalletId(posting.getFromWalletId());
 		logger.info("From Amout starts updating for wallet id " + posting.getFromWalletId() + " for asset Type : "
 				+ fromWallet.getAssetType().toString());
-		switch (fromWallet.getAssetType().toString().toUpperCase()) {
-		case "FIAT_HKD":
-			Optional<HKDWallet> hkdWallet = fiatHKDRepository.findById(fromWallet.getId());
+		switch (fromWallet.getAssetType()) {
+		case FIAT_CURRENCY_ONE:
+			Optional<FiatCurrencyOneWallet> hkdWallet = fiatHKDRepository.findById(fromWallet.getId());
 			hkdWallet.get().setBalance(hkdWallet.get().getBalance().subtract(posting.getTxnAmount()));
 			fiatHKDRepository.save(hkdWallet.get());
 			break;
-		case "FIAT_USD":
-			Optional<USDWallet> usdWallet = fiatUSDRepository.findById(fromWallet.getId());
+		case FIAT_CURRENCY_TWO:
+			Optional<FiatCurrencyTwoWallet> usdWallet = fiatUSDRepository.findById(fromWallet.getId());
 			usdWallet.get().setBalance(usdWallet.get().getBalance().subtract(posting.getTxnAmount()));
 			fiatUSDRepository.save(usdWallet.get());
 			break;
-		case "STOCK":
+		case STOCK:
 			Optional<StockWallet> stockWallet = stockRepository.findById(fromWallet.getId());
 			stockWallet.get().setBalanceQty(stockWallet.get().getBalanceQty().subtract(posting.getTxnAmount()));
 			stockRepository.save(stockWallet.get());
 			break;
-		case "CRYPTO":
+		case CRYPTO:
 			Optional<CryptoWallet> cryptoWallet = cryptoRepository.findById(fromWallet.getId());
 			cryptoWallet.get().setBalanceQty(cryptoWallet.get().getBalanceQty().subtract(posting.getTxnAmount()));
 			cryptoRepository.save(cryptoWallet.get());
 			break;
-		case "FUND":
+		case FUND:
 			Optional<FundWallet> fundWallet = fundRepository.findById(fromWallet.getId());
 			fundWallet.get().setBalance(fundWallet.get().getBalance().subtract(posting.getTxnAmount()));
 			fundRepository.save(fundWallet.get());
@@ -117,28 +116,28 @@ public class AccountLedgerUtil {
 		Wallet toWallet = walletRepository.findByWalletId(posting.getToWalletId());
 		logger.info("To Amout starts updating for wallet id " + posting.getFromWalletId() + " for asset Type : "
 				+ toWallet.getAssetType().toString());
-		switch (toWallet.getAssetType().toString().toUpperCase()) {
-		case "FIAT_HKD":
-			Optional<HKDWallet> hkdWallet = fiatHKDRepository.findById(toWallet.getId());
+		switch (toWallet.getAssetType()) {
+		case FIAT_CURRENCY_ONE:
+			Optional<FiatCurrencyOneWallet> hkdWallet = fiatHKDRepository.findById(toWallet.getId());
 			hkdWallet.get().setBalance(hkdWallet.get().getBalance().add(posting.getTxnAmount()));
 			fiatHKDRepository.save(hkdWallet.get());
 			break;
-		case "FIAT_USD":
-			Optional<USDWallet> usdWallet = fiatUSDRepository.findById(toWallet.getId());
+		case FIAT_CURRENCY_TWO:
+			Optional<FiatCurrencyTwoWallet> usdWallet = fiatUSDRepository.findById(toWallet.getId());
 			usdWallet.get().setBalance(usdWallet.get().getBalance().add(posting.getTxnAmount()));
 			fiatUSDRepository.save(usdWallet.get());
 			break;
-		case "STOCK":
+		case STOCK:
 			Optional<StockWallet> stockWallet = stockRepository.findById(toWallet.getId());
 			stockWallet.get().setBalanceQty(stockWallet.get().getBalanceQty().add(posting.getTxnAmount()));
 			stockRepository.save(stockWallet.get());
 			break;
-		case "CRYPTO":
+		case CRYPTO:
 			Optional<CryptoWallet> cryptoWallet = cryptoRepository.findById(toWallet.getId());
 			cryptoWallet.get().setBalanceQty(cryptoWallet.get().getBalanceQty().add(posting.getTxnAmount()));
 			cryptoRepository.save(cryptoWallet.get());
 			break;
-		case "FUND":
+		case FUND:
 			Optional<FundWallet> fundWallet = fundRepository.findById(toWallet.getId());
 			fundWallet.get().setBalance(fundWallet.get().getBalance().add(posting.getTxnAmount()));
 			fundRepository.save(fundWallet.get());

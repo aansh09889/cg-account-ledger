@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.axonframework.commandhandling.CommandHandler;
-import org.axonframework.common.StringUtils;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.spring.stereotype.Aggregate;
@@ -18,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.cg.account.ledger.command.AssetPostingCommand;
 import com.cg.account.ledger.command.AssetPostingStatusChangeCommand;
 import com.cg.account.ledger.constants.PostingStatus;
-import com.cg.account.ledger.entity.Posting;
 import com.cg.account.ledger.event.AssetPostingEvent;
 import com.cg.account.ledger.event.AssetPostingStatusChangeEvent;
 import com.cg.account.ledger.repository.AssetPostingRepository;

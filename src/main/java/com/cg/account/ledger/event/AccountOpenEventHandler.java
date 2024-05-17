@@ -16,14 +16,14 @@ import com.cg.account.ledger.constants.AccountStatus;
 import com.cg.account.ledger.entity.Account;
 import com.cg.account.ledger.entity.CryptoWallet;
 import com.cg.account.ledger.entity.FundWallet;
-import com.cg.account.ledger.entity.HKDWallet;
+import com.cg.account.ledger.entity.FiatCurrencyOneWallet;
 import com.cg.account.ledger.entity.StockWallet;
-import com.cg.account.ledger.entity.USDWallet;
+import com.cg.account.ledger.entity.FiatCurrencyTwoWallet;
 import com.cg.account.ledger.model.CryptoWalletModel;
 import com.cg.account.ledger.model.FundWalletModel;
-import com.cg.account.ledger.model.HKDWalletModel;
+import com.cg.account.ledger.model.FiatCurrencyOne;
 import com.cg.account.ledger.model.StockWalletModel;
-import com.cg.account.ledger.model.USDWalletModel;
+import com.cg.account.ledger.model.FiatCurrencyTwo;
 import com.cg.account.ledger.model.WalletModel;
 import com.cg.account.ledger.repository.AccountRepository;
 
@@ -65,9 +65,9 @@ public class AccountOpenEventHandler {
     
     private void addWalletFromWalletModel(WalletModel walletModel, Account account, String symbol) {
         switch (walletModel.getAssetType()) {
-            case FIAT_USD -> {
-                USDWalletModel usdWalletModel = (USDWalletModel) walletModel;
-                account.getWallets().add(USDWallet.builder()
+            case FIAT_CURRENCY_TWO -> {
+                FiatCurrencyTwo usdWalletModel = (FiatCurrencyTwo) walletModel;
+                account.getWallets().add(FiatCurrencyTwoWallet.builder()
                         .account(account)
                         .walletId(usdWalletModel.getWalletId())
                         .balance(usdWalletModel.getBalance())
@@ -75,9 +75,9 @@ public class AccountOpenEventHandler {
                         .build());
                 break;
             }
-            case FIAT_HKD -> {
-                HKDWalletModel hkdWalletModel = (HKDWalletModel) walletModel;
-                account.getWallets().add(HKDWallet.builder()
+            case FIAT_CURRENCY_ONE -> {
+                FiatCurrencyOne hkdWalletModel = (FiatCurrencyOne) walletModel;
+                account.getWallets().add(FiatCurrencyOneWallet.builder()
                         .account(account)
                         .walletId(hkdWalletModel.getWalletId())
                         .balance(hkdWalletModel.getBalance())

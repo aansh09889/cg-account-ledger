@@ -2,7 +2,6 @@ package com.cg.account.ledger.exception;
 
 import java.time.LocalDateTime;
 
-import org.axonframework.commandhandling.CommandExecutionException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

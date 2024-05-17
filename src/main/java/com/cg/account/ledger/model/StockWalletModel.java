@@ -1,11 +1,11 @@
 package com.cg.account.ledger.model;
 
-import lombok.Builder;
-import lombok.Data;
-
 import java.util.Map;
 
 import com.cg.account.ledger.constants.AssetType;
+
+import lombok.Builder;
+import lombok.Data;
 
 @Data
 public class StockWalletModel extends WalletModel {

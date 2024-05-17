@@ -1,12 +1,9 @@
 package com.cg.account.ledger.repository;
 
-import java.math.BigDecimal;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.cg.account.ledger.entity.HKDWallet;
+import com.cg.account.ledger.entity.FiatCurrencyOneWallet;
 
-public interface FiatHKDRepository extends JpaRepository<HKDWallet, Long>{
+public interface FiatHKDRepository extends JpaRepository<FiatCurrencyOneWallet, Long>{
 
-	//BigDecimal getBalancefromId(long id);
 }

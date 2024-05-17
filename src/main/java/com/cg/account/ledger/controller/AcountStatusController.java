@@ -1,11 +1,9 @@
 package com.cg.account.ledger.controller;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
-import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cg.account.ledger.command.AccountStatusCommand;
 import com.cg.account.ledger.exception.AccountNotFoundException;
 import com.cg.account.ledger.model.AccountDataModel;
-import com.google.rpc.context.AttributeContext.Response;
 
 import jakarta.validation.Valid;
 
@@ -37,7 +34,9 @@ public class AcountStatusController {
 		try {
 			return ResponseEntity.ok(commandGateway.sendAndWait(
 					AccountStatusCommand.builder().accountId(accountId).status(account.getAccountStatus()).build()));
+					
 		} catch (AccountNotFoundException e) {
+			logger.error("Error at Account Status controller : "+e.getLocalizedMessage());
 			return ResponseEntity.notFound().build();
 		}
 

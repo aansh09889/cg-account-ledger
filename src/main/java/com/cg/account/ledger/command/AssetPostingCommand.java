@@ -7,11 +7,15 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 import com.cg.account.ledger.constants.PostingStatus;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AssetPostingCommand {
 
     @TargetAggregateIdentifier

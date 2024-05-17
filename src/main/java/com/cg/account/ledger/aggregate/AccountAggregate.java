@@ -33,10 +33,10 @@ import com.cg.account.ledger.model.CryptoDataModel;
 import com.cg.account.ledger.model.CryptoWalletModel;
 import com.cg.account.ledger.model.FundDataModel;
 import com.cg.account.ledger.model.FundWalletModel;
-import com.cg.account.ledger.model.HKDWalletModel;
+import com.cg.account.ledger.model.FiatCurrencyOne;
 import com.cg.account.ledger.model.StockDataModel;
 import com.cg.account.ledger.model.StockWalletModel;
-import com.cg.account.ledger.model.USDWalletModel;
+import com.cg.account.ledger.model.FiatCurrencyTwo;
 import com.cg.account.ledger.model.WalletModel;
 import com.cg.account.ledger.repository.AccountRepository;
 
@@ -82,8 +82,9 @@ public class AccountAggregate {
 	    
 	    @EventSourcingHandler
 	    public void on(AccountStatusChangeEvent accountStatusChangeEvent) {
+	    	this.accountId=accountStatusChangeEvent.getAccountId();
 	        logger.info("Account Status Change get called in event sourcing...."+accountStatusChangeEvent.getAccountId());
-	        this.accountId=accountStatusChangeEvent.getAccountId();
+	        
 	        this.accountStatus=accountStatusChangeEvent.getStatus();
 	     //   this.wallets = accountOpenedEvent.getWallets();
 	    }
@@ -93,7 +94,7 @@ public class AccountAggregate {
 	        // Create 5 Wallets (USDWallet,HKDWallet,CryptoWallet,StockWallet
 	        // Adding USD Wallet
 	        String usdWalletId = UUID.randomUUID().toString();
-	        this.wallets.put(usdWalletId, USDWalletModel.builder()
+	        this.wallets.put(usdWalletId, FiatCurrencyTwo.builder()
 	                .accountId(openAccountCommand.getAccountId())
 	                .walletId(usdWalletId.toString())
 
@@ -101,7 +102,7 @@ public class AccountAggregate {
 
 	        // Adding HKD Wallet
 	        String hkdWalletId = UUID.randomUUID().toString();
-	        this.wallets.put(hkdWalletId, HKDWalletModel.builder()
+	        this.wallets.put(hkdWalletId, FiatCurrencyOne.builder()
 	                .accountId(openAccountCommand.getAccountId())
 	                .walletId(hkdWalletId.toString())
 	                .balance(FiatCurrency.HKD.getInitialBalance()).build());

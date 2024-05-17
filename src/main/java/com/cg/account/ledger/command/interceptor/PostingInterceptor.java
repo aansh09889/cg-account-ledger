@@ -8,6 +8,8 @@ import javax.annotation.Nonnull;
 
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.messaging.MessageDispatchInterceptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -50,12 +52,15 @@ public class PostingInterceptor implements MessageDispatchInterceptor<CommandMes
     
     @Autowired
     AssetPostingRepository assetPostingRepository;
-
+    private static final Logger logger = LoggerFactory.getLogger(PostingInterceptor.class);
+    
     @Nonnull
     @Override
     public BiFunction<Integer, CommandMessage<?>, CommandMessage<?>> handle(@Nonnull List<? extends CommandMessage<?>> messages) {
         return (index,command) -> {
+        	 logger.info("Post Intercepted command: " + command.getPayloadType());
             if(AssetPostingCommand.class.equals(command.getPayloadType())) {
+            	 logger.info("Asset Posint Command Interceptor: " + command.getPayloadType());
             	AssetPostingCommand createPostingCommand = (AssetPostingCommand) command.getPayload();
                 // Validate the Account status, if it's Open then only allow posting.
                 Account account = accountRepository.findById(createPostingCommand.getAccountId()).orElseThrow(() -> new AccountNotFoundException(createPostingCommand.getAccountId()));
@@ -65,6 +70,7 @@ public class PostingInterceptor implements MessageDispatchInterceptor<CommandMes
                 // Validate the fromWalletId with accountId
                 AccountLookup fromWalletAccountLookup = accountLookupRepository.findByAccountIdAndWalletId(createPostingCommand.getAccountId(),createPostingCommand.getFromWalletId());
                 if(fromWalletAccountLookup == null) {
+                	logger.error("fromWalletAccountLookup not avaliable  : " + createPostingCommand.getFromWalletId());
                     throw new IllegalStateException(
                             String.format("Account with accountId %s and walletId %s does not exist",
                                     createPostingCommand.getAccountId(),createPostingCommand.getFromWalletId())
@@ -72,7 +78,8 @@ public class PostingInterceptor implements MessageDispatchInterceptor<CommandMes
                 }
                 // Validate the toWalletId with accountId.
                 AccountLookup toWalletAccountLookup = accountLookupRepository.findByAccountIdAndWalletId(createPostingCommand.getAccountId(),createPostingCommand.getToWalletId());
-                if(fromWalletAccountLookup == null) {
+                if(toWalletAccountLookup == null) {
+                	logger.error("toWalletAccountLookup not avaliable  : " + createPostingCommand);
                     throw new IllegalStateException(
                             String.format("Account with accountId %s and walletId %s does not exist",
                                     createPostingCommand.getAccountId(),createPostingCommand.getToWalletId())
@@ -83,6 +90,7 @@ public class PostingInterceptor implements MessageDispatchInterceptor<CommandMes
                 Wallet wallet=walletRepository.findByWalletId(fromWalletAccountLookup.getWalletId());
                 BigDecimal availableAmount=accountLedgerUtil.getAmountFromAsset(wallet);
                 if(createPostingCommand.getTxnAmount().compareTo(availableAmount) > 0) {
+                	logger.error("Transaction Amount is more than available amount for accountId for wallet id  : " + fromWalletAccountLookup.getWalletId());
                     throw new IllegalStateException(
                             String.format("Transaction Amount is more than available amount for accountId %s and walletId %s",
                                     createPostingCommand.getAccountId(),createPostingCommand.getToWalletId())
@@ -90,15 +98,18 @@ public class PostingInterceptor implements MessageDispatchInterceptor<CommandMes
                 }
                 
             }else if(AssetPostingStatusChangeCommand.class.equals(command.getPayloadType())) {
+            	 logger.info("Asset Posting Status Change Command: " + command.getPayloadType());
             	AssetPostingStatusChangeCommand assetPostingStatusChangeCommand = (AssetPostingStatusChangeCommand) command.getPayload();
             	// Account Validation
                 Account account = accountRepository.findById(assetPostingStatusChangeCommand.getAccountId()).orElseThrow(() -> new AccountNotFoundException(assetPostingStatusChangeCommand.getAccountId()));
                 if(account != null && !account.getStatus().equals(AccountStatus.OPEN)) {
+                	logger.error("Inoperative Account Exception for Asset Posting Status Change : " + assetPostingStatusChangeCommand.getAccountId());
                     throw new InoperativeAccountException(assetPostingStatusChangeCommand.getAccountId(),account.getStatus());
                 }
               //Posting ID Validation   
                Posting posting= assetPostingRepository.findByPostingId(assetPostingStatusChangeCommand.getPostingId());
                if(posting==null) {
+            	   logger.error("Posting Id Not Found Exception: " + assetPostingStatusChangeCommand.getAccountId());
             	   throw new PostingIdNotFoundException(assetPostingStatusChangeCommand.getAccountId());
                }
             }

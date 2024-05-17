@@ -1,10 +1,10 @@
 package com.cg.account.ledger.exception;
 
+import javax.annotation.Nonnull;
+
 import org.axonframework.eventhandling.EventMessage;
 import org.axonframework.eventhandling.EventMessageHandler;
 import org.axonframework.eventhandling.ListenerInvocationErrorHandler;
-
-import javax.annotation.Nonnull;
 
 public class AccountServiceEventErrorHandler implements ListenerInvocationErrorHandler {
 

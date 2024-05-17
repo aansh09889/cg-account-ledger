@@ -38,13 +38,13 @@ public class AssetPostingController {
 				.forEach(assetPosting -> commandGateway.send(AssetPostingCommand.builder()
 						.accountId(assetPosting.getAccountId()).fromWalletId(assetPosting.getFromWalletId())
 						.toWalletId(assetPosting.getToWalletId()).txnAmount(assetPosting.getTxnAmount()).build()));
-		// postingCommandService.createPosting(lstPostingDTO);
 		return ResponseEntity.accepted().build();
 	}
 
-	@PutMapping("/{accountId}/update/posting")
+	@PutMapping("/{accountId}/posting")
 	public ResponseEntity updatePostingStatus(@PathVariable(value = "accountId") String accountId,
 			@Valid @RequestBody List<AssetPostingStatusChangeModel> assetPostingStatusChangeModel) {
+		logger.info("Request received to update the status of the post in  controller for account id :" + accountId);
 		assetPostingStatusChangeModel.stream()
 				.forEach(assetPostingStatusChange -> commandGateway.sendAndWait(
 						AssetPostingStatusChangeCommand.builder().postingId(assetPostingStatusChange.getPostingId())
